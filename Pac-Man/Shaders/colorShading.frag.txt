@@ -1,0 +1,19 @@
+#version 130
+
+//input from vertex shader
+in vec4 fragmentColor;
+in vec2 fragmentPosition;
+in vec2 fragmentUV;
+
+//outputs the 3 component float vector to the screen for each pixel
+out vec4 color;
+
+uniform sampler2D mySampler;
+
+void main(){
+
+	vec4 textureColor = texture(mySampler, fragmentUV);
+	
+	//update color to change with time and position
+	color = fragmentColor * textureColor;
+}
