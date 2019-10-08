@@ -1,13 +1,20 @@
 #include "Ghosts.h"
 
 #include <iostream>
+#include <math.h>
+#include <random>
+#include <ctime>
+#include <glm/gtx/rotate_vector.hpp>
 
-Ghosts::Ghosts(glm::vec2 pos, int ghostNum, int speed) {
+Ghosts::Ghosts(glm::vec2 pos, int ghostNum, int speed, glm::vec2 leftTeleport, glm::vec2 rightTeleport) {
 	_startLoc = pos;
 	_speed = speed;
 	
 	//set initial position to start position when creating ghosts
 	_position = _startLoc;
+	_direction = glm::normalize(_position + glm::vec2(100.0f, 100.0f));
+	_leftTeleport = leftTeleport;
+	_rightTeleport = rightTeleport;
 
 	_ghostNum = ghostNum;
 
@@ -26,13 +33,50 @@ Ghosts::~Ghosts() {
 
 void Ghosts::update(glm::vec2 playerPos, const std::vector<std::string>& levelData) {
 	//TO-DO --- Update Ghost AI
-	_direction = playerPos - _position;
 
-	_direction = glm::normalize(_direction);
+	//random number generator for movement when not near player
+	static bool seeded = false;
+	static std::mt19937 randomEngine;
+
+	//prevent reseeding random engine each init call
+	if (!seeded) {
+		randomEngine.seed(time(nullptr));
+		seeded = true;
+	}
+
+	//random number for direction for ghosts
+	static std::uniform_real_distribution<float> randRotate(-0.25f, 0.25f);
+
+	
+	//get distance to player
+	float playerDistance = std::sqrt(((playerPos.x - _position.x) * (playerPos.x - _position.x)) +
+		((playerPos.y - _position.y) * (playerPos.y - _position.y)));
+
+	if (playerDistance < MAX_PLAYER_DISTANCE) {
+
+		//direct ghost toward player
+		_direction = glm::normalize(playerPos - _position);	
+	}
+	//move ghosts at random
+	else {
+		//rotate ghosts to move in random direction
+		_direction = glm::rotate(_direction, randRotate(randomEngine));
+	}
+
+	//if colliding with wall attempt to change direction
+	if (collideWithLevel(levelData)) {
+		_direction = glm::rotate(_direction, randRotate(randomEngine));
+	}
 
 	_position += _direction * _speed;
 
-	collideWithLevel(levelData);
+	//check if at teleport and move ghost if so
+	if (_position.x < _leftTeleport.x) {
+		_position = _rightTeleport;
+	}
+	else if (_position.x > _rightTeleport.x) {
+		_position = _leftTeleport;
+	}
 }
 
 void Ghosts::draw(Bengine::SpriteBatch& spriteBatch) {

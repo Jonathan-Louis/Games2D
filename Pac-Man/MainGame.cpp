@@ -36,6 +36,7 @@ void MainGame::run() {
 	gameLoop();
 
 	std::printf("~~~~GAME OVER~~~~\nTotal Pellets Eaten: %d\n", _numPelletsEaten);
+	Bengine::fatalError("");
 }
 
 //game loop to run game
@@ -167,7 +168,7 @@ void MainGame::initLevels() {
 	_player->init(PLAYER_SPEED, &_inputManager, &_camera, _levels[_currentLevel]->getPlayerStartPos(), _levels[_currentLevel]->getLeftTeleport(), _levels[_currentLevel]->getRightTeleport());
 
 	for (int i = 0; i < 4; i++) {
-		_ghosts.emplace_back(new Ghosts(_levels[_currentLevel]->getGhostStart(), i + 1, GHOST_SPEED));
+		_ghosts.emplace_back(new Ghosts(_levels[_currentLevel]->getGhostStart(), i + 1, GHOST_SPEED, _levels[_currentLevel]->getLeftTeleport(), _levels[_currentLevel]->getRightTeleport()));
 	}
 }
 
