@@ -47,20 +47,24 @@ void Ghosts::update(glm::vec2 playerPos, const std::vector<std::string>& levelDa
 	//random number for direction for ghosts
 	static std::uniform_real_distribution<float> randRotate(-0.25f, 0.25f);
 
-	
+
+	//change ghost direction
+	if (_frameCounter >= 5) {
+			//rotate ghosts to move in random direction
+			_direction = glm::rotate(_direction, randRotate(randomEngine));
+			_frameCounter = 0;
+	}
+	else {
+		_frameCounter++;
+	}
+
 	//get distance to player
 	float playerDistance = std::sqrt(((playerPos.x - _position.x) * (playerPos.x - _position.x)) +
 		((playerPos.y - _position.y) * (playerPos.y - _position.y)));
 
 	if (playerDistance < MAX_PLAYER_DISTANCE) {
-
 		//direct ghost toward player
-		_direction = glm::normalize(playerPos - _position);	
-	}
-	//move ghosts at random
-	else {
-		//rotate ghosts to move in random direction
-		_direction = glm::rotate(_direction, randRotate(randomEngine));
+		_direction = glm::normalize(playerPos - _position);
 	}
 
 	//if colliding with wall attempt to change direction
@@ -105,9 +109,6 @@ void Ghosts::draw(Bengine::SpriteBatch& spriteBatch) {
 	else {
 		_textureID = Bengine::ResourceManager::getTexture("Textures/rosekane_44.png").id;
 	}
-
-
-	_frameCounter++;
 
 	spriteBatch.draw(destRect, uvRect, _textureID, 0.0f, _color);
 }

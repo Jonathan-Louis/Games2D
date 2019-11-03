@@ -57,6 +57,9 @@ private:
 
 	//update the ghosts
 	void updateGhosts();
+
+	//delete ghosts at end of level
+	void deleteGhosts();
 	
 	//draws the graphics to the screen
 	void drawGame();
@@ -93,6 +96,7 @@ private:
 	Player* _player;
 
 	std::vector<Pellets*> _pellets;
+	std::vector<Pellets*> _bigPellets;
 
 	int _numPelletsEaten;
 

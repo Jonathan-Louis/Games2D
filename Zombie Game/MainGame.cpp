@@ -57,7 +57,7 @@ void MainGame::initSystems() {
 
 
 	//set camera scale
-	_camera.setScale(1.0);
+	_camera.setScale(0.65f);
 
 	//update camera with scale
 	_camera.update();
@@ -99,7 +99,7 @@ void MainGame::initLevel() {
 
 	//add players guns
 	_player->addGun(new Gun("Revolver", 12, 0.2f, 1, 20.0f, 40));
-	_player->addGun(new Gun("Shotgun", 30, 1, 20, 20.0f, 10));
+	_player->addGun(new Gun("Shotgun", 30, 1.0f, 20, 20.0f, 10));
 	_player->addGun(new Gun("Machine Gun", 3, 0.5f, 1, 20.0f, 20));
 }
 
@@ -119,6 +119,9 @@ void MainGame::gameLoop() {
 		_fpsLimiter.begin();
 
 		checkWin();
+		
+		//update input manager
+		_inputManager.update();
 
 		processInput();
 		
@@ -377,10 +380,10 @@ void MainGame::processInput() {
 		}
 	}
 	
-	if (_inputManager.isKeyPressed(SDLK_q)) {
+	if (_inputManager.isKeyDown(SDLK_q)) {
 		_camera.setScale(_camera.getScale() + SCALE_SPEED);
 	}
-	if (_inputManager.isKeyPressed(SDLK_e)) {
+	if (_inputManager.isKeyDown(SDLK_e)) {
 		_camera.setScale(_camera.getScale() - SCALE_SPEED);
 		std::cout << _camera.getScale() << std::endl;
 	}

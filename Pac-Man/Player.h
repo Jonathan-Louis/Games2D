@@ -36,5 +36,6 @@ private:
 	glm::vec2 _leftTeleport;
 	glm::vec2 _rightTeleport;
 	int _lives;
+	int _direction;	//0 = right, 1 = left, 2 = up, 3 = down
 };
 

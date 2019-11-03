@@ -31,9 +31,18 @@ void MainGame::run() {
 
 	//initialize levels
 	initLevels();
-	   
+
 	//loop while game active
 	gameLoop();
+
+	while (_player->getLives() > 0) {
+
+		//initialize levels
+		initLevels();
+
+		//loop while game active
+		gameLoop();
+	}
 
 	std::printf("~~~~GAME OVER~~~~\nTotal Pellets Eaten: %d\n", _numPelletsEaten);
 	Bengine::fatalError("");
@@ -68,7 +77,7 @@ void MainGame::gameLoop() {
 
 		_fps = _fpsLimiter.end();
 
-		//print every 10 frames
+		//print every 10000 frames
 		static int frameCounter = 0;
 		frameCounter++;
 		if (frameCounter == 10000) {
@@ -76,17 +85,20 @@ void MainGame::gameLoop() {
 			frameCounter = 0;
 		}
 
-		//check for end level/game conditions
+		//check for player out of lives
 		if (checkGameOver()) {
 			break;
 		}
 
-		//TO-DO implement resetting level to continue ----- currently break
+		//check if all pellets eaten
 		if (checkLevelEnd()) {
 			break;
 		}
 
 	}
+
+	//destroy current remaining ghosts
+	deleteGhosts();
 }
 
 //process inputs from the mouse and keyboard
@@ -125,10 +137,10 @@ void MainGame::processInput() {
 	}
 
 	
-	if (_inputManager.isKeyPressed(SDLK_q)) {
+	if (_inputManager.isKeyDown(SDLK_q)) {
 		_camera.setScale(_camera.getScale() + SCALE_SPEED);
 	}
-	if (_inputManager.isKeyPressed(SDLK_e)) {
+	if (_inputManager.isKeyDown(SDLK_e)) {
 		_camera.setScale(_camera.getScale() - SCALE_SPEED);
 	}
 	
@@ -157,11 +169,16 @@ void MainGame::initSystems() {
 void MainGame::initLevels() {
 
 	//input level data
-	_levels.emplace_back(new Level("Levels/Level.txt"));
+	_levels.emplace_back(new Level("Levels/Level2.txt"));
 	_currentLevel = 0;
 	for (int i = 0; i < _levels[_currentLevel]->getNumPellets(); i++) {
 		_pellets.emplace_back(new Pellets());
 		_pellets[i]->setPos(_levels[_currentLevel]->getPelletsLoc(i));
+	}
+	for (int i = 0; i < _levels[_currentLevel]->getNumBigPellets(); i++) {
+		_bigPellets.emplace_back(new Pellets());
+		_bigPellets[i]->setPos(_levels[_currentLevel]->getBigPelletsLoc(i));
+		_bigPellets[i]->setTexture();
 	}
 
 	_player = new Player;
@@ -195,6 +212,14 @@ void MainGame::updatePlayer() {
 			_pellets.pop_back();
 			_numPelletsEaten++;
 		}
+		if (i < _bigPellets.size()) {
+			if (_player->collideWithBigPellets(_bigPellets[i])) {
+				//remove pellet if eaten
+				_bigPellets[i] = _bigPellets.back();
+				_bigPellets.pop_back();
+				_numPelletsEaten++;
+			}
+		}
 	}
 
 	//check for collision with ghosts
@@ -212,6 +237,13 @@ void MainGame::updateGhosts() {
 		_ghosts[i]->update(_player->getPosition(), _levels[_currentLevel]->getLevelData());
 	}
 
+}
+
+void MainGame::deleteGhosts() {
+	int ghostSize = _ghosts.size();
+	for (int i = 0; i < ghostSize; i++) {
+		_ghosts.pop_back();
+	}
 }
 
 
@@ -255,6 +287,11 @@ void MainGame::drawGame() {
 	//draw the pellets
 	for (int i = 0; i < _pellets.size(); i++) {
 		_pellets[i]->draw(_spriteBatch, _pellets[i]->getDestRect());
+	}
+
+	//draw the big pellets
+	for (int i = 0; i < _bigPellets.size(); i++) {
+		_bigPellets[i]->draw(_spriteBatch, _bigPellets[i]->getDestRect());
 	}
 
 	//draw the ghosts

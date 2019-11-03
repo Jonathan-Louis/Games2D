@@ -43,17 +43,17 @@ void Player::update(const std::vector<std::string>& levelData,
 	std::vector<Zombie*>& zombies) {
 	
 	//player movement
-	if (_inputManager->isKeyPressed(SDLK_w)) {
+	if (_inputManager->isKeyDown(SDLK_w)) {
 		_position.y += _speed;
 	}
-	else if (_inputManager->isKeyPressed(SDLK_s)) {
+	else if (_inputManager->isKeyDown(SDLK_s)) {
 		_position.y -= _speed;
 	}
 	
-	if (_inputManager->isKeyPressed(SDLK_a)) {
+	if (_inputManager->isKeyDown(SDLK_a)) {
 		_position.x -= _speed;
 	}
-	else if (_inputManager->isKeyPressed(SDLK_d)) {
+	else if (_inputManager->isKeyDown(SDLK_d)) {
 		_position.x += _speed;
 	}
 
@@ -78,7 +78,7 @@ void Player::update(const std::vector<std::string>& levelData,
 	glm::vec2 direction = glm::normalize(mouseCoords - centerPos);
 	
 	if (_currentGun != -1) {
-		_guns[_currentGun]->update(_inputManager->isKeyPressed(SDL_BUTTON_LEFT), direction, centerPos, *_bullets);
+		_guns[_currentGun]->update(_inputManager->isKeyDown(SDL_BUTTON_LEFT), direction, centerPos, *_bullets);
 		
 	}
 

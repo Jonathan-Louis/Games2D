@@ -1,6 +1,7 @@
 #pragma once
 
 #include <Bengine/ResourceManager.h>
+#include <string>
 
 #include "Agents.h"
 
@@ -12,6 +13,8 @@ public:
 
 	//setters
 	void setPos(glm::vec2 pos);
+	//change texture for big pellets
+	void setTexture() { _textureID = Bengine::ResourceManager::getTexture("Textures/rosekane_4.png").id; }
 
 	//getters
 	glm::vec4 getDestRect() { return _destRect; };

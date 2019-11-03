@@ -26,25 +26,30 @@ void Player::init(float speed, Bengine::InputManager* inputManager, Bengine::Cam
 	_color.b = 255;
 	_color.a = 255;
 	_frameCounter = 0;
+	_direction = 0;
 }
 
 void Player::update(const std::vector<std::string>& levelData) {
 
 	//player movement
-	if (_inputManager->isKeyPressed(SDLK_w)) {
+	if (_inputManager->isKeyDown(SDLK_w)) {
 		_position.y += _speed;
+		_direction = 2;
 	}
-	else if (_inputManager->isKeyPressed(SDLK_s)) {
+	else if (_inputManager->isKeyDown(SDLK_s)) {
 		_position.y -= _speed;
+		_direction = 3;
 	}
 
-	if (_inputManager->isKeyPressed(SDLK_a)) {
+	if (_inputManager->isKeyDown(SDLK_a)) {
 		_position.x -= _speed;
 		_playerDirection = false;
+		_direction = 1;
 	}
-	else if (_inputManager->isKeyPressed(SDLK_d)) {
+	else if (_inputManager->isKeyDown(SDLK_d)) {
 		_position.x += _speed;
 		_playerDirection = true;
+		_direction = 0;
 	}
 
 	collideWithLevel(levelData);
@@ -68,8 +73,9 @@ void Player::draw(Bengine::SpriteBatch& spriteBatch) {
 
 
 	//animate player
+	switch (_direction) {
 	//facing right
-	if (_playerDirection) {
+	case 0: 
 		if (_frameCounter < 2) {
 			_textureID = Bengine::ResourceManager::getTexture("Textures/rosekane_72.png").id;
 			_frameCounter++;
@@ -98,9 +104,11 @@ void Player::draw(Bengine::SpriteBatch& spriteBatch) {
 			_textureID = Bengine::ResourceManager::getTexture("Textures/rosekane_72.png").id;
 			_frameCounter = 0;
 		}
-	}
+		break;
+	
+		
 	//facing left
-	else {
+	case 1: 
 		if (_frameCounter < 2) {
 			_textureID = Bengine::ResourceManager::getTexture("Textures/rosekane_58.png").id;
 			_frameCounter++;
@@ -129,6 +137,75 @@ void Player::draw(Bengine::SpriteBatch& spriteBatch) {
 			_textureID = Bengine::ResourceManager::getTexture("Textures/rosekane_58.png").id;
 			_frameCounter = 0;
 		}
+		break;
+	
+	//facing up
+	case 2:
+		if (_frameCounter < 2) {
+			_textureID = Bengine::ResourceManager::getTexture("Textures/rosekane_102.png").id;
+			_frameCounter++;
+		}
+		else if (_frameCounter >= 2 && _frameCounter < 4) {
+			_textureID = Bengine::ResourceManager::getTexture("Textures/rosekane_103.png").id;
+			_frameCounter++;
+		}
+		else if (_frameCounter >= 4 && _frameCounter < 6) {
+			_textureID = Bengine::ResourceManager::getTexture("Textures/rosekane_104.png").id;
+			_frameCounter++;
+		}
+		else if (_frameCounter >= 6 && _frameCounter < 8) {
+			_textureID = Bengine::ResourceManager::getTexture("Textures/rosekane_105.png").id;
+			_frameCounter++;
+		}
+		else if (_frameCounter >= 8 && _frameCounter < 10) {
+			_textureID = Bengine::ResourceManager::getTexture("Textures/rosekane_104.png").id;
+			_frameCounter++;
+		}
+		else if (_frameCounter >= 10 && _frameCounter < 12) {
+			_textureID = Bengine::ResourceManager::getTexture("Textures/rosekane_103.png").id;
+			_frameCounter++;
+		}
+		else if (_frameCounter >= 12) {
+			_textureID = Bengine::ResourceManager::getTexture("Textures/rosekane_102.png").id;
+			_frameCounter = 0;
+		}
+		break;
+
+	//facing down
+	case 3:
+		if (_frameCounter < 2) {
+			_textureID = Bengine::ResourceManager::getTexture("Textures/rosekane_89.png").id;
+			_frameCounter++;
+		}
+		else if (_frameCounter >= 2 && _frameCounter < 4) {
+			_textureID = Bengine::ResourceManager::getTexture("Textures/rosekane_90.png").id;
+			_frameCounter++;
+		}
+		else if (_frameCounter >= 4 && _frameCounter < 6) {
+			_textureID = Bengine::ResourceManager::getTexture("Textures/rosekane_91.png").id;
+			_frameCounter++;
+		}
+		else if (_frameCounter >= 6 && _frameCounter < 8) {
+			_textureID = Bengine::ResourceManager::getTexture("Textures/rosekane_92.png").id;
+			_frameCounter++;
+		}
+		else if (_frameCounter >= 8 && _frameCounter < 10) {
+			_textureID = Bengine::ResourceManager::getTexture("Textures/rosekane_91.png").id;
+			_frameCounter++;
+		}
+		else if (_frameCounter >= 10 && _frameCounter < 12) {
+			_textureID = Bengine::ResourceManager::getTexture("Textures/rosekane_90.png").id;
+			_frameCounter++;
+		}
+		else if (_frameCounter >= 12) {
+			_textureID = Bengine::ResourceManager::getTexture("Textures/rosekane_89.png").id;
+			_frameCounter = 0;
+		}
+		break;
+
+	default:
+		_textureID = Bengine::ResourceManager::getTexture("Textures/rosekane_58.png").id;
+		break;
 	}
 	
 	spriteBatch.draw(destRect, uvRect, _textureID, 0.0f, _color);

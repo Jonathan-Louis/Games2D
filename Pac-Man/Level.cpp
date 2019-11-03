@@ -32,45 +32,51 @@ Level::Level(const std::string& fileName) {
 			case 'W':
 				break;
 
-				//set the pellets
+			//set the pellets
 			case '*':
 				_pelletPos.emplace_back(glm::vec2(j, i));
 				_levelData[i][j] = 'E';
 				break;
 
-				//set pacman starting point
+			//set the big pellets
+			case 'b':
+				_bigPelletPos.emplace_back(glm::vec2(j, i));
+				_levelData[i][j] = 'E';
+				break;
+
+			//set pacman starting point
 			case 'P':
 				_startPlayerPos.x = j * TILE_WIDTH;
 				_startPlayerPos.y = i * TILE_WIDTH;
 				_levelData[i][j] = 'E';
 				break;
 				
-				//set ghosts starting point
+			//set ghosts starting point
 			case 'G':
 				_ghostPos.x = j * TILE_WIDTH;
 				_ghostPos.y = i * TILE_WIDTH;
 				_levelData[i][j] = 'E';
 				break;
 
-				//set left teleport space
+			//set left teleport space
 			case 'A':
 				_leftTeleport.x = j * TILE_WIDTH;
 				_leftTeleport.y = i * TILE_WIDTH;
 				_levelData[i][j] = 'E';
 				break;
 
-				//set right teleport
+			//set right teleport
 			case 'B':
 				_rightTeleport.x = j * TILE_WIDTH;
 				_rightTeleport.y = i * TILE_WIDTH;
 				_levelData[i][j] = 'E';
 				break;
 
-				//ignore E(empty spaces) for level construction
+			//ignore E(empty spaces) for level construction
 			case 'E':
 				break;
 
-				//default to output if unkown char found in level data
+			//default to output if unkown char found in level data
 			default:
 				std::printf("Unexpected Symbol %c at (%d, %d)", tile, i, j);
 				break;

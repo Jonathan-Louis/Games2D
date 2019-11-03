@@ -100,6 +100,29 @@ bool Agents::collideWithPellets(Agents* agent) {
 	return false;
 }
 
+bool Agents::collideWithBigPellets(Agents* agent) {
+	const float MIN_DISTANCE = AGENT_RADIUS + PELLET_RADIUS;
+
+	//position of current agent
+	glm::vec2 centerPosA = _position + glm::vec2(AGENT_RADIUS);
+
+	//position of other agents
+	glm::vec2 centerPosB = agent->getPosition() + glm::vec2(AGENT_RADIUS);
+
+	glm::vec2 distVec = centerPosA - centerPosB;
+
+	float distance = glm::length(distVec);
+
+	float collisionDepth = MIN_DISTANCE - distance;
+
+	if (collisionDepth > 0) {
+
+		return true;
+	}
+
+	return false;
+}
+
 void Agents::checkTiles(const std::vector<std::string>& levelData, std::vector<glm::vec2>& collideTilePosition, float cornerX, float cornerY) {
 
 	//check corner

@@ -25,7 +25,9 @@ public:
 	const int getWidth() { return _levelData[0].size(); }
 	const int getHeight() { return _levelData.size(); }
 	const glm::vec2 getPelletsLoc(int i) { return _pelletPos[i]; }
+	const glm::vec2 getBigPelletsLoc(int i) { return _bigPelletPos[i]; }
 	const int getNumPellets() { return _pelletPos.size(); }
+	const int getNumBigPellets() { return _bigPelletPos.size(); }
 	const glm::vec2 getLeftTeleport() { return _leftTeleport; }
 	const glm::vec2 getRightTeleport() { return _rightTeleport; }
 	const glm::vec2 getGhostStart() { return _ghostPos; }
@@ -40,6 +42,7 @@ private:
 	glm::vec2 _ghostPos;
 
 	std::vector<glm::vec2> _pelletPos;
+	std::vector<glm::vec2> _bigPelletPos;
 
 	glm::vec2 _leftTeleport;
 	glm::vec2 _rightTeleport;

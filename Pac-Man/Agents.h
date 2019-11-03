@@ -31,6 +31,9 @@ public:
 	//check for collision with pellets
 	bool collideWithPellets(Agents* agent);
 
+	//check for collision with big pellets
+	bool collideWithBigPellets(Agents* agent);
+
 	//set agent position
 	void setPosition(glm::vec2 pos) { _position = pos; }
 
